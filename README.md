@@ -9,5 +9,3 @@
 - `npm install`
 - `npm start`
 - Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
-
-*Note:* for clean build run `rm -rf node_modules` at first.
