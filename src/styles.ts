@@ -18,6 +18,7 @@ const styles = createUseStyles(({
   drawingCanvas: {
     backgroundRepeat: 'no-repeat',
     backgroundPosition: 'center',
+    cursor: 'crosshair',
   },
 }), { name: 'App' });
 

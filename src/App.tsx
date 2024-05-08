@@ -6,8 +6,8 @@ import { getArtboardDataURL, getArtboardSize } from 'features/layer/layerOptions
 import useMouseEvents, { TMouseEvent } from 'shared/hooks/useMouseEvents';
 import useTouchEvents, { TTouchEvent } from 'shared/hooks/useTouchEvents';
 
-import { Size } from 'utils/types';
-import logger from 'utils/logger';
+import { Point, Size } from 'utils/types';
+import { scaleValue } from 'utils/range';
 
 import styles from './styles';
 
@@ -22,18 +22,30 @@ function App() {
   const mouseEvents = useMouseEvents();
   const touchEvents = useTouchEvents();
 
-  const getPos = useCallback((event: TMouseEvent | TTouchEvent) => {
+  const getPos = useCallback((event: TMouseEvent | TTouchEvent): Point => {
     const screenRect = drawingCanvas.current!.getBoundingClientRect();
-    return 'touches' in event
+    const screenPos = 'touches' in event
       ? {
-        x: (event as TouchEvent).touches[0].clientX - screenRect.left,
-        y: (event as TouchEvent).touches[0].clientY - screenRect.top,
+        x: (event as TouchEvent).touches[0].clientX,
+        y: (event as TouchEvent).touches[0].clientY,
       }
       : {
-        x: (event as MouseEvent).clientX - screenRect.left,
-        y: (event as MouseEvent).clientY - screenRect.top,
+        x: (event as MouseEvent).clientX,
+        y: (event as MouseEvent).clientY,
       };
-  }, []);
+    return {
+      x: scaleValue({
+        value: screenPos.x - screenRect.left,
+        originalRange: [0, screenRect.width],
+        targetRange: [0, artboardSize.width],
+      }),
+      y: scaleValue({
+        value: screenPos.y - screenRect.top,
+        originalRange: [0, screenRect.height],
+        targetRange: [0, artboardSize.height],
+      }),
+    };
+  }, [artboardSize]);
 
   const down = useCallback((event: TMouseEvent | TTouchEvent) => {
     const { x, y } = getPos(event);
