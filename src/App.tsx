@@ -1,54 +1,24 @@
 import { useCallback, useEffect, useRef } from 'react';
-import { useAppSelector } from 'shared/redux/hooks';
 import ZoomControls from 'features/zoom/ZoomControls';
 import Artboard from 'features/layer/artboard/Artboard';
-import { getArtboardDataURL, getArtboardSize } from 'features/layer/layerOptionsSlice';
 import useMouseEvents, { TMouseEvent } from 'shared/hooks/useMouseEvents';
 import useTouchEvents, { TTouchEvent } from 'shared/hooks/useTouchEvents';
 
-import { Point, Size } from 'utils/types';
-import { scaleValue } from 'utils/range';
-
 import styles from './styles';
+import useArtboard from './features/layer/artboard/useArtboard';
 
 function App() {
   const classes = styles();
 
-  const artboardSize: Size = useAppSelector(getArtboardSize);
-  const artboardDataURL: string = useAppSelector(getArtboardDataURL);
+  const { artboardSize, getPos } = useArtboard();
 
   const drawingCanvas = useRef<null | HTMLCanvasElement>(null);
 
   const mouseEvents = useMouseEvents();
   const touchEvents = useTouchEvents();
 
-  const getPos = useCallback((event: TMouseEvent | TTouchEvent): Point => {
-    const screenRect = drawingCanvas.current!.getBoundingClientRect();
-    const screenPos = 'touches' in event
-      ? {
-        x: (event as TouchEvent).touches[0].clientX,
-        y: (event as TouchEvent).touches[0].clientY,
-      }
-      : {
-        x: (event as MouseEvent).clientX,
-        y: (event as MouseEvent).clientY,
-      };
-    return {
-      x: scaleValue({
-        value: screenPos.x - screenRect.left,
-        originalRange: [0, screenRect.width],
-        targetRange: [0, artboardSize.width],
-      }),
-      y: scaleValue({
-        value: screenPos.y - screenRect.top,
-        originalRange: [0, screenRect.height],
-        targetRange: [0, artboardSize.height],
-      }),
-    };
-  }, [artboardSize]);
-
   const down = useCallback((event: TMouseEvent | TTouchEvent) => {
-    const { x, y } = getPos(event);
+    const { x, y } = getPos(event, drawingCanvas.current!);
     const ctx = drawingCanvas.current!.getContext('2d')!;
     ctx.strokeStyle = 'lightblue';
     ctx.lineWidth = 10;
@@ -58,14 +28,14 @@ function App() {
   }, [getPos]);
 
   const move = useCallback((event: TMouseEvent | TTouchEvent) => {
-    const { x, y } = getPos(event);
+    const { x, y } = getPos(event, drawingCanvas.current!);
     const ctx = drawingCanvas.current!.getContext('2d')!;
     ctx.lineTo(x, y);
     ctx.stroke();
   }, [getPos]);
 
   const up = useCallback((event: TMouseEvent | TTouchEvent) => {
-    const { x, y } = getPos(event);
+    const { x, y } = getPos(event, drawingCanvas.current!);
     const ctx = drawingCanvas.current!.getContext('2d')!;
     ctx.lineTo(x, y);
     ctx.stroke();
@@ -120,7 +90,7 @@ function App() {
             onTouchStart={e => touchEvents.next(e)}
             className={classes.drawingCanvas}
             style={{
-              backgroundImage: `url(${artboardDataURL})`,
+              backgroundImage: 'url("https://picsum.photos/200/300")',
               ...artboardSize,
             }}
           />

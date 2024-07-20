@@ -1,14 +1,15 @@
 import { ReactElement, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import useTouchGestures from 'features/zoom/useTouchGestures';
 import { useAppDispatch, useAppSelector } from 'shared/redux/hooks';
-import { getArtboardSize, getScaleFactor, setScaleFactor } from 'features/layer/layerOptionsSlice';
+import { getScaleFactor, setScaleFactor } from 'features/layer/layerOptionsSlice';
 import useWheelGestures from 'features/zoom/useWheelGestures';
 import throttle from 'lodash.throttle';
 import { zoomRange } from 'features/zoom/ZoomControls';
 
-import { Point, Size } from 'utils/types';
+import { Point } from 'utils/types';
 
 import styles from './styles';
+import useArtboard from './useArtboard';
 
 const { min, max, abs, sign, round } = Math;
 
@@ -20,7 +21,7 @@ function Artboard({ children }: ArtboardProps) {
   const classes = styles();
   const dispatch = useAppDispatch();
 
-  const layerSize: Size = useAppSelector(getArtboardSize);
+  const { artboardSize: layerSize } = useArtboard();
   const scaleFactor = useAppSelector(getScaleFactor);
 
   const wheelGestures = useWheelGestures(scaleFactor);
