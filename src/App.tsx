@@ -52,6 +52,7 @@ function App() {
     const ctx = drawingCanvas.current!.getContext('2d')!;
     ctx.strokeStyle = 'lightblue';
     ctx.lineWidth = 10;
+    ctx.lineCap = 'round';
     ctx.beginPath();
     ctx.moveTo(x, y);
   }, [getPos]);
@@ -63,10 +64,13 @@ function App() {
     ctx.stroke();
   }, [getPos]);
 
-  const up = useCallback(() => {
+  const up = useCallback((event: TMouseEvent | TTouchEvent) => {
+    const { x, y } = getPos(event);
     const ctx = drawingCanvas.current!.getContext('2d')!;
+    ctx.lineTo(x, y);
+    ctx.stroke();
     ctx.closePath();
-  }, []);
+  }, [getPos]);
 
   useEffect(() => {
     mouseEvents.attach({
@@ -74,7 +78,7 @@ function App() {
       move,
       end: e => {
         e.stopPropagation();
-        up();
+        up(e);
       },
     });
     touchEvents.attach('single', {
