@@ -1,7 +1,5 @@
 import { ReactElement, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import useTouchGestures from 'features/zoom/useTouchGestures';
-import { useAppDispatch, useAppSelector } from 'shared/redux/hooks';
-import { getScaleFactor, setScaleFactor } from 'features/layer/layerOptionsSlice';
 import useWheelGestures from 'features/zoom/useWheelGestures';
 import throttle from 'lodash.throttle';
 import { zoomRange } from 'features/zoom/ZoomControls';
@@ -14,15 +12,15 @@ import useArtboard from './useArtboard';
 const { min, max, abs, sign, round } = Math;
 
 type ArtboardProps = {
+  scaleFactor: number;
+  onZoom: (scaleFactor: number) => void;
   children: ReactElement;
 };
 
-function Artboard({ children }: ArtboardProps) {
+function Artboard({ scaleFactor, onZoom, children }: ArtboardProps) {
   const classes = styles();
-  const dispatch = useAppDispatch();
 
   const { artboardSize: layerSize } = useArtboard();
-  const scaleFactor = useAppSelector(getScaleFactor);
 
   const wheelGestures = useWheelGestures(scaleFactor);
   const touchGestures = useTouchGestures(scaleFactor);
@@ -50,8 +48,8 @@ function Artboard({ children }: ArtboardProps) {
 
   const zoom = useMemo(() => throttle((newScaleFactor: number) => {
     const clampedScaleFactor = min(max(zoomRange.coreMin, newScaleFactor), zoomRange.coreMax);
-    dispatch(setScaleFactor(clampedScaleFactor));
-  }, 10), [dispatch]);
+    onZoom(Number(clampedScaleFactor.toFixed(2)));
+  }, 10), [onZoom]);
 
   const scroll = useMemo(() => throttle((
     deltaX: number,
@@ -140,6 +138,10 @@ function Artboard({ children }: ArtboardProps) {
   const scrollerTop = useMemo(() => min(98.5 - scrollerSize, max(0, verticalScrollPos - scrollerSize / 2)), [scrollerSize, verticalScrollPos]);
   const scrollerLeft = useMemo(() => min(98.5 - scrollerSize, max(0, horizontalScrollPos - scrollerSize / 2)), [scrollerSize, horizontalScrollPos]);
 
+  // prevents canvas re-rendering when zooming
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const _children = useMemo(() => children, []);
+
   return (
     <div
       className={classes.scrollPane}
@@ -154,7 +156,7 @@ function Artboard({ children }: ArtboardProps) {
           ...layerSize,
         }}
       >
-        {children}
+        {_children}
       </section>
       <i
         className={classes.verticalScroll}

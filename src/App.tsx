@@ -1,16 +1,17 @@
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import ZoomControls from 'features/zoom/ZoomControls';
 import Artboard from 'features/layer/artboard/Artboard';
 import useMouseEvents, { TMouseEvent } from 'shared/hooks/useMouseEvents';
 import useTouchEvents, { TTouchEvent } from 'shared/hooks/useTouchEvents';
 
-import styles from './styles';
 import useArtboard from './features/layer/artboard/useArtboard';
+import styles from './styles';
 
 function App() {
   const classes = styles();
 
   const { artboardSize, getPos } = useArtboard();
+  const [scaleFactor, setScaleFactor] = useState<number>(1);
 
   const drawingCanvas = useRef<null | HTMLCanvasElement>(null);
 
@@ -78,7 +79,10 @@ function App() {
         onMouseMove={e => mouseEvents.next(e)}
         onTouchMove={e => touchEvents.next(e)}
       >
-        <Artboard>
+        <Artboard
+          scaleFactor={scaleFactor}
+          onZoom={setScaleFactor}
+        >
           <canvas
             ref={ref => {
               if (!ref) return;
@@ -95,7 +99,10 @@ function App() {
             }}
           />
         </Artboard>
-        <ZoomControls />
+        <ZoomControls
+          scaleFactor={scaleFactor}
+          onZoom={setScaleFactor}
+        />
       </div>
     </div>
   );

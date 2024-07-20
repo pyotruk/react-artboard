@@ -1,7 +1,7 @@
 ## Prerequisites
 
-- `node -v` >= 18
-- `npm -v` >= 9
+- `node -v` >= 20
+- `npm -v` >= 10
 
 
 ## How to run

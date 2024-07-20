@@ -1,6 +1,4 @@
-import { useEffect, useState } from 'react';
-import { useAppDispatch, useAppSelector } from 'shared/redux/hooks';
-import { getScaleFactor, setScaleFactor } from 'features/layer/layerOptionsSlice';
+import { useCallback, useEffect, useState } from 'react';
 
 import { scaleValue } from 'utils/range';
 
@@ -17,12 +15,14 @@ export const zoomRange = {
 
 const { min, max } = Math;
 
-function ZoomControls() {
+type ZoomControlsProps = {
+  scaleFactor: number;
+  onZoom: (scaleFactor: number) => void;
+};
+
+function ZoomControls({ scaleFactor, onZoom }: ZoomControlsProps) {
   const classes = styles();
   const [inputValue, setInputValue] = useState(100);
-
-  const dispatch = useAppDispatch();
-  const scaleFactor = useAppSelector(getScaleFactor);
 
   useEffect(() => {
     setInputValue(scaleValue({
@@ -32,12 +32,12 @@ function ZoomControls() {
     }));
   }, [scaleFactor]);
 
-  const handleZoom = (newScaleFactor: number) => {
+  const handleZoom = useCallback((newScaleFactor: number) => {
     const clampedScaleFactor = max(zoomRange.coreMin, min(newScaleFactor, zoomRange.coreMax));
-    dispatch(setScaleFactor(clampedScaleFactor));
-  };
+    onZoom(Number(clampedScaleFactor.toFixed(2)));
+  }, [onZoom]);
 
-  const handleInputConfirm = (event: any) => {
+  const handleInputConfirm = useCallback((event: any) => {
     if (event.key === 'Enter') {
       const newInputValue = max(zoomRange.uiMin, min(zoomRange.uiMax, inputValue));
       setInputValue(newInputValue);
@@ -48,7 +48,7 @@ function ZoomControls() {
       });
       handleZoom(newScaleFactor);
     }
-  };
+  }, [handleZoom, inputValue]);
 
   return (
     <div className={classes.wrapper}>
