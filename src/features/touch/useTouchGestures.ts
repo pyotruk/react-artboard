@@ -1,8 +1,9 @@
 import { useCallback, useEffect, useRef } from 'react';
-import useTouchEvents, { TTouchEvent } from 'shared/hooks/useTouchEvents';
 
 import { Point } from 'utils/types';
 import logger from 'utils/logger';
+
+import useTouchEvents, { TTouchEvent } from './useTouchEvents';
 
 const { abs, hypot } = Math;
 

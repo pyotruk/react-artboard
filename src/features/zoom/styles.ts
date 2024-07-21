@@ -20,6 +20,7 @@ const styles = createUseStyles(({
     width: '36px',
     height: '36px',
     borderRadius: 8,
+    cursor: 'pointer',
   },
   zoomInput: {
     background: 'inherit',

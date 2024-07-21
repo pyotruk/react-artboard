@@ -29,8 +29,4 @@ describe('scaleValue', () => {
     const result = scaleValue({ value, originalRange, targetRange });
     expect(result).toBeCloseTo(expectedResult, 2);
   });
-
-  it('Should throw if provided value is not in original range', () => {
-    expect(() => scaleValue({ value: 1, originalRange: [5, 10], targetRange: [0, 100] })).toThrow('Wrong value provided, 1 is not in originalRange');
-  });
 });

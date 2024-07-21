@@ -6,7 +6,7 @@
     "node": "^20",
     "npm": "^10"
   },
-  "main": "dist/index.d.ts",
+  "main": "index.tsx",
   "dependencies": {
     "@types/lodash.throttle": "^4.1.9",
     "lodash.throttle": "^4.1.1",

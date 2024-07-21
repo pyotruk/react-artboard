@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import ZoomControls from 'features/zoom/ZoomControls';
-import Artboard from 'features/layer/artboard/Artboard';
-import useMouseEvents, { TMouseEvent } from 'shared/hooks/useMouseEvents';
-import useTouchEvents, { TTouchEvent } from 'shared/hooks/useTouchEvents';
+import Artboard from 'features/artboard/Artboard';
+import useMouseEvents, { TMouseEvent } from 'features/mouse/useMouseEvents';
+import useTouchEvents, { TTouchEvent } from 'features/touch/useTouchEvents';
 
-import useArtboard from './features/layer/artboard/useArtboard';
+import useArtboard from './features/artboard/useArtboard';
 import styles from './styles';
 
 function App() {

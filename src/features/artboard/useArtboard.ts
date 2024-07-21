@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
-import { TMouseEvent } from 'shared/hooks/useMouseEvents';
-import { TTouchEvent } from 'shared/hooks/useTouchEvents';
+import { TMouseEvent } from 'features/mouse/useMouseEvents';
+import { TTouchEvent } from 'features/touch/useTouchEvents';
 
 import { Point } from 'utils/types';
 import { scaleValue } from 'utils/range';
