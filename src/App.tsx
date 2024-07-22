@@ -3,8 +3,9 @@ import ZoomControls from 'features/zoom/ZoomControls';
 import Artboard from 'features/artboard/Artboard';
 import useMouseEvents, { TMouseEvent } from 'features/mouse/useMouseEvents';
 import useTouchEvents, { TTouchEvent } from 'features/touch/useTouchEvents';
+import useDrawing from 'features/drawing/useDrawing';
+import useArtboard from 'features/artboard/useArtboard';
 
-import useArtboard from './features/artboard/useArtboard';
 import styles from './styles';
 
 function App() {
@@ -14,34 +15,25 @@ function App() {
   const [scaleFactor, setScaleFactor] = useState<number>(1);
 
   const drawingCanvas = useRef<null | HTMLCanvasElement>(null);
+  const { beginBrush, continueBrush, endBrush } = useDrawing();
 
   const mouseEvents = useMouseEvents();
   const touchEvents = useTouchEvents();
 
   const down = useCallback((event: TMouseEvent | TTouchEvent) => {
     const { x, y } = getPos(event, drawingCanvas.current!);
-    const ctx = drawingCanvas.current!.getContext('2d')!;
-    ctx.strokeStyle = 'lightblue';
-    ctx.lineWidth = 10;
-    ctx.lineCap = 'round';
-    ctx.beginPath();
-    ctx.moveTo(x, y);
-  }, [getPos]);
+    beginBrush(x, y, drawingCanvas.current!.getContext('2d')!);
+  }, [getPos, beginBrush]);
 
   const move = useCallback((event: TMouseEvent | TTouchEvent) => {
     const { x, y } = getPos(event, drawingCanvas.current!);
-    const ctx = drawingCanvas.current!.getContext('2d')!;
-    ctx.lineTo(x, y);
-    ctx.stroke();
-  }, [getPos]);
+    continueBrush(x, y, drawingCanvas.current!.getContext('2d')!);
+  }, [getPos, continueBrush]);
 
   const up = useCallback((event: TMouseEvent | TTouchEvent) => {
     const { x, y } = getPos(event, drawingCanvas.current!);
-    const ctx = drawingCanvas.current!.getContext('2d')!;
-    ctx.lineTo(x, y);
-    ctx.stroke();
-    ctx.closePath();
-  }, [getPos]);
+    endBrush(x, y, drawingCanvas.current!.getContext('2d')!);
+  }, [getPos, endBrush]);
 
   useEffect(() => {
     mouseEvents.attach({
