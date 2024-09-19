@@ -16,7 +16,7 @@ const useArtboard = () => {
     drawingCanvas: HTMLCanvasElement,
   ): Point => {
     const screenRect = drawingCanvas.getBoundingClientRect();
-    const screenPos = 'touches' in event
+    const screenPos = 'touches' in event && event.touches.length
       ? {
         x: (event as TouchEvent).touches[0].clientX,
         y: (event as TouchEvent).touches[0].clientY,

@@ -13,7 +13,7 @@ const scrollerMargin = 3;
 const styles = createUseStyles({
   scrollPane: {
     width: '100%',
-    height: '100%',
+    height: '100dvh',
     overflow: 'hidden',
     position: 'relative',
     touchAction: 'none',
