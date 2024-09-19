@@ -1,23 +1,12 @@
 import { useCallback, useEffect, useRef } from 'react';
 
-import { Point } from 'utils/types';
 import logger from 'utils/logger';
 
 import useTouchEvents, { TTouchEvent } from './useTouchEvents';
+import { calcFingersDistance, calcFingersMidpoint } from './utils';
+import { isPan, isPinch } from './detectors';
 
-const { abs, hypot } = Math;
-
-const PINCH_OR_PAN_EPSILON = 3; // px
-
-const calcFingersDistance = (event: TTouchEvent): number => hypot(
-  event.touches[0].clientX - event.touches[1].clientX,
-  event.touches[0].clientY - event.touches[1].clientY,
-);
-
-const calcFingersMidpoint = (event: TTouchEvent): Point => ({
-  x: (event.touches[0].clientX + event.touches[1].clientX) / 2,
-  y: (event.touches[0].clientY + event.touches[1].clientY) / 2,
-});
+const { abs } = Math;
 
 type TouchGestures = {
   pinch: (scaleFactor: number) => void;
@@ -44,11 +33,12 @@ const useTouchGestures = (currentScaleFactor: number) => {
       const prevDistance = calcFingersDistance(prevTouch.current);
       const distance = calcFingersDistance(event);
 
-      if (abs(distance - prevDistance) < PINCH_OR_PAN_EPSILON) {
+      if (isPan(event, prevTouch.current)) {
         const midpoint = calcFingersMidpoint(event);
         const prevMidpoint = calcFingersMidpoint(prevTouch.current);
         gestures.current.pan(prevMidpoint.x - midpoint.x, prevMidpoint.y - midpoint.y);
-      } else {
+      }
+      if (isPinch(event, prevTouch.current)) {
         const zoomIntensity = currentScaleFactor >= 1 ? 100 : 200;
         const zoomFactor = abs(distance - prevDistance) / zoomIntensity;
 
