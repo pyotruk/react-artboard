@@ -3,14 +3,15 @@ import { useCallback, useEffect, useRef } from 'react';
 import logger from 'utils/logger';
 
 import useTouchEvents, { TTouchEvent } from './useTouchEvents';
-import { calcFingersDistance, calcFingersMidpoint } from './utils';
-import { isPan, isPinch } from './detectors';
+import { calcFingersAngle, calcFingersDistance, calcFingersMidpoint } from './utils';
+import { isPan, isPinch, isRotate } from './detectors';
 
 const { abs } = Math;
 
 type TouchGestures = {
   pinch: (scaleFactor: number) => void;
   pan: (deltaX: number, deltaY: number) => void;
+  rotate: (angle: number) => void;
 };
 
 const useTouchGestures = (currentScaleFactor: number) => {
@@ -37,8 +38,7 @@ const useTouchGestures = (currentScaleFactor: number) => {
         const midpoint = calcFingersMidpoint(event);
         const prevMidpoint = calcFingersMidpoint(prevTouch.current);
         gestures.current.pan(prevMidpoint.x - midpoint.x, prevMidpoint.y - midpoint.y);
-      }
-      if (isPinch(event, prevTouch.current)) {
+      } else if (isPinch(event, prevTouch.current)) {
         const zoomIntensity = currentScaleFactor >= 1 ? 100 : 200;
         const zoomFactor = abs(distance - prevDistance) / zoomIntensity;
 
@@ -48,6 +48,8 @@ const useTouchGestures = (currentScaleFactor: number) => {
         if (distance < prevDistance) {
           gestures.current.pinch(currentScaleFactor - zoomFactor);
         }
+      } else if (isRotate(event, prevTouch.current)) {
+        gestures.current.rotate(calcFingersAngle(event));
       }
     }
     prevTouch.current = event;

@@ -26,6 +26,7 @@ function Artboard({ scaleFactor, onZoom, children }: ArtboardProps) {
   const touchGestures = useTouchGestures(scaleFactor);
 
   const [cssTranslate, setCssTranslate] = useState<Point>({ x: 0, y: 0 });
+  const [cssRotate, setCssRotate] = useState<number>(0);
 
   const scrollPaneRef = useRef<null | HTMLDivElement>(null);
   const artboardRef = useRef<null | HTMLElement>(null);
@@ -67,6 +68,10 @@ function Artboard({ scaleFactor, onZoom, children }: ArtboardProps) {
     }));
   }, 10), [scaleFactor]);
 
+  const rotate = useMemo(() => throttle((angle: number) => {
+    setCssRotate(angle);
+  }, 10), []);
+
   useEffect(() => {
     wheelGestures.attach({
       zoom,
@@ -75,8 +80,9 @@ function Artboard({ scaleFactor, onZoom, children }: ArtboardProps) {
     touchGestures.attach({
       pinch: zoom,
       pan: scroll,
+      rotate,
     });
-  }, [wheelGestures, touchGestures, zoom, scroll]);
+  }, [wheelGestures, touchGestures, zoom, scroll, rotate]);
 
   useEffect(() => {
     const scrollPane = scrollPaneRef.current;
@@ -152,7 +158,7 @@ function Artboard({ scaleFactor, onZoom, children }: ArtboardProps) {
         className={classes.artboard}
         style={{
           aspectRatio: `${layerSize.width} / ${layerSize.height}`,
-          transform: `scale(${scaleFactor}) translate(${cssTranslate.x}px, ${cssTranslate.y}px)`,
+          transform: `scale(${scaleFactor}) translate(${cssTranslate.x}px, ${cssTranslate.y}px) rotate(${cssRotate}deg)`,
           ...layerSize,
         }}
       >
