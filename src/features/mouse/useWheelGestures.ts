@@ -3,11 +3,13 @@ import { useCallback, useRef } from 'react';
 import logger from 'utils/logger';
 
 type WheelGestures = {
-  zoom: (scaleFactor: number) => void;
+  zoom: (scaleFactorDelta: number) => void;
   scroll: (deltaX: number, deltaY: number) => void;
 };
 
-const useWheelGestures = (currentScaleFactor: number) => {
+const SCALE_FACTOR_DELTA = 10;
+
+const useWheelGestures = () => {
   const gestures = useRef<WheelGestures>();
 
   const handleWheel = useCallback((event: WheelEvent) => {
@@ -17,18 +19,16 @@ const useWheelGestures = (currentScaleFactor: number) => {
     }
 
     if (event.ctrlKey) {
-      const zoomFactor = currentScaleFactor >= 1 ? 0.1 : 0.05;
-
       if (event.deltaY < 0) {
-        gestures.current.zoom(currentScaleFactor + zoomFactor);
+        gestures.current.zoom(SCALE_FACTOR_DELTA);
       }
       if (event.deltaY > 0) {
-        gestures.current.zoom(currentScaleFactor - zoomFactor);
+        gestures.current.zoom(-SCALE_FACTOR_DELTA);
       }
     } else {
       gestures.current.scroll(event.deltaX, event.deltaY);
     }
-  }, [currentScaleFactor]);
+  }, []);
 
   return {
     attach: (wheelGestures: WheelGestures) => {

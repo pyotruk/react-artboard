@@ -22,8 +22,8 @@ function Artboard({ scaleFactor, onZoom, children }: ArtboardProps) {
 
   const { artboardSize: layerSize } = useArtboard();
 
-  const wheelGestures = useWheelGestures(scaleFactor);
-  const touchGestures = useTouchGestures(scaleFactor);
+  const wheelGestures = useWheelGestures();
+  const touchGestures = useTouchGestures();
 
   const [cssTranslate, setCssTranslate] = useState<Point>({ x: 0, y: 0 });
   const [cssRotate, setCssRotate] = useState<number>(0);
@@ -47,10 +47,12 @@ function Artboard({ scaleFactor, onZoom, children }: ArtboardProps) {
     return () => resizeObserver.unobserve(scrollPane);
   }, [resetToCenter]);
 
-  const zoom = useMemo(() => throttle((newScaleFactor: number) => {
+  const zoom = useMemo(() => throttle((scaleFactorDelta: number) => {
+    const zoomIntensity = scaleFactor >= 1 ? 100 : 200;
+    const newScaleFactor = scaleFactor + scaleFactorDelta / zoomIntensity;
     const clampedScaleFactor = min(max(zoomRange.coreMin, newScaleFactor), zoomRange.coreMax);
     onZoom(Number(clampedScaleFactor.toFixed(2)));
-  }, 10), [onZoom]);
+  }, 10), [scaleFactor, onZoom]);
 
   const scroll = useMemo(() => throttle((
     deltaX: number,

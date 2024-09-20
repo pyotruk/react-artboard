@@ -9,12 +9,12 @@ import { isPan, isPinch, isRotate } from './detectors';
 const { abs } = Math;
 
 type TouchGestures = {
-  pinch: (scaleFactor: number) => void;
+  pinch: (scaleFactorDelta: number) => void;
   pan: (deltaX: number, deltaY: number) => void;
   rotate: (angleDelta: number) => void;
 };
 
-const useTouchGestures = (currentScaleFactor: number) => {
+const useTouchGestures = () => {
   const gestures = useRef<TouchGestures>();
   const prevTouch = useRef<null | TTouchEvent>(null);
 
@@ -39,21 +39,20 @@ const useTouchGestures = (currentScaleFactor: number) => {
         const prevMidpoint = calcFingersMidpoint(prevTouch.current);
         gestures.current.pan(prevMidpoint.x - midpoint.x, prevMidpoint.y - midpoint.y);
       } else if (isPinch(event, prevTouch.current)) {
-        const zoomIntensity = currentScaleFactor >= 1 ? 100 : 200;
-        const zoomFactor = abs(distance - prevDistance) / zoomIntensity;
+        const scaleFactorDelta = abs(distance - prevDistance);
 
         if (distance > prevDistance) {
-          gestures.current.pinch(currentScaleFactor + zoomFactor);
+          gestures.current.pinch(scaleFactorDelta);
         }
         if (distance < prevDistance) {
-          gestures.current.pinch(currentScaleFactor - zoomFactor);
+          gestures.current.pinch(-scaleFactorDelta);
         }
       } else if (isRotate(event, prevTouch.current)) {
         gestures.current.rotate(calcFingersAngle(event) - calcFingersAngle(prevTouch.current));
       }
     }
     prevTouch.current = event;
-  }, [currentScaleFactor]);
+  }, []);
 
   useEffect(() => {
     touchEvents.attach('multi', {
