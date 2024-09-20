@@ -11,7 +11,7 @@ const { abs } = Math;
 type TouchGestures = {
   pinch: (scaleFactor: number) => void;
   pan: (deltaX: number, deltaY: number) => void;
-  rotate: (angle: number) => void;
+  rotate: (angleDelta: number) => void;
 };
 
 const useTouchGestures = (currentScaleFactor: number) => {
@@ -49,7 +49,7 @@ const useTouchGestures = (currentScaleFactor: number) => {
           gestures.current.pinch(currentScaleFactor - zoomFactor);
         }
       } else if (isRotate(event, prevTouch.current)) {
-        gestures.current.rotate(calcFingersAngle(event));
+        gestures.current.rotate(calcFingersAngle(event) - calcFingersAngle(prevTouch.current));
       }
     }
     prevTouch.current = event;

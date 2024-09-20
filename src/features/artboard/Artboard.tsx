@@ -68,8 +68,8 @@ function Artboard({ scaleFactor, onZoom, children }: ArtboardProps) {
     }));
   }, 10), [scaleFactor]);
 
-  const rotate = useMemo(() => throttle((angle: number) => {
-    setCssRotate(angle);
+  const rotate = useMemo(() => throttle((angleDelta: number) => {
+    setCssRotate(angle => angle + angleDelta);
   }, 10), []);
 
   useEffect(() => {
