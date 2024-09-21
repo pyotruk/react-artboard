@@ -1,4 +1,5 @@
-import { TTouchEvent } from './useTouchEvents';
+import { TTouchEvent } from '../types';
+
 import { calcFingersAngle, calcFingersDistance } from './utils';
 
 const { abs } = Math;

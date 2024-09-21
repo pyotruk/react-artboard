@@ -1,12 +1,8 @@
 import { Touch } from 'react';
 
-import { Point } from 'utils/types';
-
-import { TTouchEvent } from './useTouchEvents';
+import { Point, TTouchEvent } from '../types';
 
 const { hypot, atan2, PI } = Math;
-
-export const calcDistance = (p1: Point, p2: Point): number => hypot(p1.x - p2.x, p1.y - p2.y);
 
 const radiansToDegrees = (radians: number): number => radians * 180 / PI;
 

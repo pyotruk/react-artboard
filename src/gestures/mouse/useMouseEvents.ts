@@ -1,9 +1,9 @@
 import { Subject, Subscription } from 'rxjs';
-import { MouseEvent as ReactMouseEvent, useCallback, useRef } from 'react';
+import { useCallback, useRef } from 'react';
 
 import logger from 'utils/logger';
 
-export type TMouseEvent = MouseEvent | ReactMouseEvent;
+import { TMouseEvent } from '../types';
 
 type MouseHandlers = {
   start: (event: TMouseEvent) => void;

@@ -1,8 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import ZoomControls from 'features/zoom/ZoomControls';
 import Artboard from 'features/artboard/Artboard';
-import useMouseEvents, { TMouseEvent } from 'features/mouse/useMouseEvents';
-import useTouchEvents, { TTouchEvent } from 'features/touch/useTouchEvents';
+import useMouseEvents from 'gestures/mouse/useMouseEvents';
+import useTouchEvents from 'gestures/touch/useTouchEvents';
+import { TMouseEvent, TTouchEvent } from 'gestures/types';
 import useDrawing from 'features/drawing/useDrawing';
 import useArtboard from 'features/artboard/useArtboard';
 

@@ -1,9 +1,9 @@
 import { Subject, Subscription } from 'rxjs';
-import { TouchEvent as ReactTouchEvent, useCallback, useRef } from 'react';
+import { useCallback, useRef } from 'react';
 
 import logger from 'utils/logger';
 
-export type TTouchEvent = TouchEvent | ReactTouchEvent;
+import { TTouchEvent } from '../types';
 
 /**
  * This logic is needed to distinguish single touches from multi-touches (more than one finger).

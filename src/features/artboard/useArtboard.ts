@@ -1,8 +1,6 @@
 import { useCallback } from 'react';
-import { TMouseEvent } from 'features/mouse/useMouseEvents';
-import { TTouchEvent } from 'features/touch/useTouchEvents';
+import { Point, TMouseEvent, TTouchEvent } from 'gestures/types';
 
-import { Point } from 'utils/types';
 import { scaleValue } from 'utils/range';
 
 const artboardSize = {

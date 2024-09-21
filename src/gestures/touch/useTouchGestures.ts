@@ -2,7 +2,9 @@ import { useCallback, useEffect, useRef } from 'react';
 
 import logger from 'utils/logger';
 
-import useTouchEvents, { TTouchEvent } from './useTouchEvents';
+import { TTouchEvent } from '../types';
+
+import useTouchEvents from './useTouchEvents';
 import { calcFingersAngle, calcFingersDistance, calcFingersMidpoint } from './utils';
 import { isPan, isPinch, isRotate } from './detectors';
 
