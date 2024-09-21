@@ -2,6 +2,8 @@ import { useCallback, useRef } from 'react';
 
 import logger from 'utils/logger';
 
+import { isScroll, isZoom } from './detectors';
+
 type WheelGestures = {
   zoom: (scaleFactorDelta: number) => void;
   scroll: (deltaX: number, deltaY: number) => void;
@@ -18,14 +20,15 @@ const useWheelGestures = () => {
       return;
     }
 
-    if (event.ctrlKey) {
+    if (isZoom(event)) {
       if (event.deltaY < 0) {
         gestures.current.zoom(SCALE_FACTOR_DELTA);
       }
       if (event.deltaY > 0) {
         gestures.current.zoom(-SCALE_FACTOR_DELTA);
       }
-    } else {
+    }
+    if (isScroll(event)) {
       gestures.current.scroll(event.deltaX, event.deltaY);
     }
   }, []);

@@ -40,7 +40,8 @@ const useTouchGestures = () => {
         const midpoint = calcFingersMidpoint(event);
         const prevMidpoint = calcFingersMidpoint(prevTouch.current);
         gestures.current.pan(prevMidpoint.x - midpoint.x, prevMidpoint.y - midpoint.y);
-      } else if (isPinch(event, prevTouch.current)) {
+      }
+      if (isPinch(event, prevTouch.current)) {
         const scaleFactorDelta = abs(distance - prevDistance);
 
         if (distance > prevDistance) {
@@ -49,7 +50,8 @@ const useTouchGestures = () => {
         if (distance < prevDistance) {
           gestures.current.pinch(-scaleFactorDelta);
         }
-      } else if (isRotate(event, prevTouch.current)) {
+      }
+      if (isRotate(event, prevTouch.current)) {
         gestures.current.rotate(calcFingersAngle(event) - calcFingersAngle(prevTouch.current));
       }
     }
