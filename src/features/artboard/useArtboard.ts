@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { Point, TMouseEvent, TTouchEvent } from 'gestures/types';
+import { Point, TMouseEvent, TTouchEvent } from 'react-gestures';
 
 import { scaleValue } from 'utils/range';
 

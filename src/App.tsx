@@ -1,9 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useMouseEvents, useTouchEvents, TMouseEvent, TTouchEvent } from 'react-gestures';
 import ZoomControls from 'features/zoom/ZoomControls';
 import Artboard from 'features/artboard/Artboard';
-import useMouseEvents from 'gestures/mouse/useMouseEvents';
-import useTouchEvents from 'gestures/touch/useTouchEvents';
-import { TMouseEvent, TTouchEvent } from 'gestures/types';
 import useDrawing from 'features/drawing/useDrawing';
 import useArtboard from 'features/artboard/useArtboard';
 
@@ -40,7 +38,7 @@ function App() {
     mouseEvents.attach({
       start: down,
       move,
-      end: e => {
+      end: (e: TMouseEvent) => {
         e.stopPropagation();
         up(e);
       },

@@ -1,7 +1,5 @@
 import { ReactElement, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import useTouchGestures from 'gestures/touch/useTouchGestures';
-import useWheelGestures from 'gestures/mouse/useWheelGestures';
-import { Point } from 'gestures/types';
+import { useTouchGestures, useWheelGestures, Point } from 'react-gestures';
 import throttle from 'lodash.throttle';
 import { zoomRange } from 'features/zoom/ZoomControls';
 
