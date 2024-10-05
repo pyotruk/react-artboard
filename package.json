@@ -38,9 +38,8 @@
   },
   "scripts": {
     "start": "react-app-rewired start",
-    "build-react": "react-scripts build",
-    "build": "npx tsc",
-    "prepare": "npm run build",
+    "build": "react-scripts build",
+    "build-ts": "npx tsc",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "lint": "npx eslint .",
